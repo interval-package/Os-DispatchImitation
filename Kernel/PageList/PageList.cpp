@@ -3,3 +3,7 @@
 //
 
 #include "PageList.h"
+
+PageList::PageList(int outerPhyAd) : PageItem(outerPhyAd) {
+
+}

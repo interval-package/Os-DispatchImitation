@@ -5,8 +5,12 @@
 #ifndef OS_DISPATCHIMITATION_PAGELIST_H
 #define OS_DISPATCHIMITATION_PAGELIST_H
 
+#include "../PageItem/PageItem.h"
 
-class PageList {
+class PageList:public PageItem{
+private:
+public:
+    explicit PageList(int outerPhyAd);
 
 };
 
