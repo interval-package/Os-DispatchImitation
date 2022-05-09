@@ -5,6 +5,6 @@
 #include "PageLinkedList.h"
 
 PageLinkedList::PageLinkedList(){
-    this->head.data = NULL;
-    this->head.next = &this->head;
+    this->head_WorkSet.data = NULL;
+    this->head_WorkSet.next = &this->head_WorkSet;
 };

@@ -6,10 +6,14 @@
 #define OS_DISPATCHIMITATION_PAGEITEM_H
 
 #include <string>
+#include "../PageFrame/PageFrame.h"
+
 
 class PageItem {
 private:
     std::string info;
+//    PageFrame* tar;
+// 这里没有处理好，我们是要用什么
 public:
 // all the objs we must explicitly call the constructor
     explicit PageItem(int outer_phyAd);

@@ -14,7 +14,12 @@ private:
         PageItem* data;
         Node* next;
     } Node, *pNode;
-    Node head;
+
+    Node head_WorkSet;
+    Node head_StaySet;
+
+    int WorkSetLen;
+
 public:
     PageLinkedList();
 
