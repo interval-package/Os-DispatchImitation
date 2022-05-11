@@ -5,9 +5,12 @@
 #ifndef OS_DISPATCHIMITATION_PAGEFRAME_H
 #define OS_DISPATCHIMITATION_PAGEFRAME_H
 
-//template<typename obj>
-class PageFrame {
+#define PAGE_LENGTH 1024
 
+class PageFrame {
+public:
+    int info;
+    int id;
 };
 
 

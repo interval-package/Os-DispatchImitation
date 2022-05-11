@@ -15,13 +15,13 @@ private:
         Node* next;
     } Node, *pNode;
 
-    Node head_WorkSet;
-    Node head_StaySet;
-
     int WorkSetLen;
 
 public:
     PageLinkedList();
+
+    Node head_WorkSet;
+    Node head_StaySet;
 
 };
 

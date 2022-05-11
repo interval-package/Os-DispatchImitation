@@ -4,4 +4,6 @@
 
 #include "DispatchAction.h"
 
-DispatchAction::DispatchAction() = default;
+DispatchAction::DispatchAction(){
+
+};

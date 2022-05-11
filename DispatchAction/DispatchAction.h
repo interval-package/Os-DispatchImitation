@@ -5,6 +5,8 @@
 #ifndef OS_DISPATCHIMITATION_DISPATCHACTION_H
 #define OS_DISPATCHIMITATION_DISPATCHACTION_H
 
+#include "../EnvImitator/Resource_Memory/Memory.h"
+#include "../EnvImitator/Resource_Disk/Disk.h"
 
 class DispatchAction {
 public:
@@ -12,8 +14,6 @@ public:
 
 
 private:
-
-
 };
 
 

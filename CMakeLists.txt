@@ -11,10 +11,10 @@ add_executable(
         Kernel/PageLinkedList/PageLinkedList.cpp Kernel/PageLinkedList/PageLinkedList.h
         Kernel/PageFrame/PageFrame.cpp Kernel/PageFrame/PageFrame.h
 
-        Kernel/DispatchAction/DispatchAction.cpp Kernel/DispatchAction/DispatchAction.h
+        DispatchAction/DispatchAction.cpp DispatchAction/DispatchAction.h
 
         Exceptions/Exception_BoundExceed.cpp Exceptions/Exception_BoundExceed.h
         Exceptions/Exception_NoSuchFrame.cpp Exceptions/Exception_NoSuchFrame.h
 
 
-        EnvImitator/Resource_Memory/Memory.cpp EnvImitator/Resource_Memory/Memory.h EnvImitator/Resource_Disk/Disk.cpp EnvImitator/Resource_Disk/Disk.h)
+        EnvImitator/Resource_Memory/Memory.cpp EnvImitator/Resource_Memory/Memory.h EnvImitator/Resource_Disk/Disk.cpp EnvImitator/Resource_Disk/Disk.h Process/Process.cpp Process/Process.h Exceptions/Exception_Page_Missing.cpp Exceptions/Exception_Page_Missing.h)

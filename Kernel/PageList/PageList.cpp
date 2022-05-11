@@ -4,6 +4,9 @@
 
 #include "PageList.h"
 
-PageList::PageList(int outerPhyAd) : PageItem(outerPhyAd) {
-
+PageList::PageList() : PageFrame() {
+    this->len = PAGE_LENGTH;
+    for(int i=0; i<PAGE_LENGTH; i++){
+        this->list[i].diskPhyAd = i;
+    }
 }

@@ -3,6 +3,3 @@
 //
 
 #include "PageItem.h"
-
-PageItem::PageItem(int phyAd):level(-1),diskPhyAd(phyAd) {}
-

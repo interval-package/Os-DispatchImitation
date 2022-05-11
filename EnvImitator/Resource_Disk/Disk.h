@@ -10,16 +10,15 @@
 class Disk {
 private:
     int d_size;
-    PageFrame body[];
-
 public:
-    Disk(int);
+    Disk();
 
     PageFrame& access_disk(int);
 
     void write_disk(int,const PageFrame&);
 
-    ~Disk();
+    PageFrame body[];
+
 };
 
 
