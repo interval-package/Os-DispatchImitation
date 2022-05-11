@@ -10,6 +10,7 @@
 #include <iostream>
 
 class Exception_BoundExceed:public std::exception {
+public:
     explicit Exception_BoundExceed(const char* msg = "bound exceed"){
         std::cerr<<msg<<std::endl;
     }

@@ -15,7 +15,7 @@ private:
 public:
     Memory(int);
 
-    void access_memory(int,int);
+    PageFrame* access_memory(int,int);
 
     void exchange_frame(int,const PageFrame&);
 

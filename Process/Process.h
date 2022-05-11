@@ -22,10 +22,9 @@ private:
     PageLinkedList page_set;
 public:
 
-    PageFrame* access_vir_mem(int ad);
+    PageFrame* access_vir_ad(int pageId);
 
-
-
+    void Dispatching();
 };
 
 
