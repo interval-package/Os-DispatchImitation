@@ -6,6 +6,12 @@
 #define OS_DISPATCHIMITATION_PAGELINKEDLIST_H
 
 #include "../PageItem/PageItem.h"
+#include "../../EnvImitator/Resource_Memory/Memory.h"
+
+
+
+// 将会在该函数内部进行调度，算法的实现
+// 这里还要实现，内存的申请和分配
 
 class PageLinkedList {
 private:
@@ -17,11 +23,17 @@ private:
 
     int WorkSetLen;
 
-public:
-    PageLinkedList();
+    void add_work_node(PageItem* tar);
 
-    Node head_WorkSet;
-    Node head_StaySet;
+    Memory *mem;
+
+public:
+    PageLinkedList(int len, Memory* tar);
+
+    Node* head_WorkSet;
+    Node* head_StaySet;
+
+    ~PageLinkedList();
 
 };
 

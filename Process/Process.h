@@ -13,18 +13,29 @@
 #include "../Kernel/PageLinkedList/PageLinkedList.h"
 #include "../Kernel/PageList/PageList.h"
 
-class Process {
-private:
-    Memory process_mem;
-    Disk process_disk;
+typedef std::vector<int> ACTIONS;
 
-    PageList list;
-    PageLinkedList page_set;
+class Process {
 public:
 
-    PageFrame* access_vir_ad(int pageId);
+    int mem_valid_size = 64;
 
+    Process(Memory *mem, Disk *disk, int WorkSpace);
+
+    PageFrame* access_vir_ad(int pageId);
     void Dispatching();
+
+    void run(ACTIONS &tar);
+
+private:
+    PageList list;
+//    使用页框链表，用于后续的调度算法
+    PageLinkedList page_set;
+
+//    获得对应的指针，内存指针应当有两个备份。
+    Memory* process_mem;
+    Disk* process_disk;
+
 };
 
 

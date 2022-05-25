@@ -22,6 +22,8 @@ public:
     int memPhyAd = -1;
     int diskPhyAd = -1;
     bool inMemory = false;
+
+//    使用回写法处理
     int isWritten = false;
     int accessTimes = 0;
     int recentAccess = -1;

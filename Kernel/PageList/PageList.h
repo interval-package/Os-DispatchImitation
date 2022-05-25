@@ -9,10 +9,9 @@
 #include "../PageFrame/PageFrame.h"
 #include "../../Exceptions/Exception_Page_Missing.h"
 
+// 页表
 // 认为PageList也是一个页表项
 class PageList:public PageFrame{
-private:
-
 public:
     explicit PageList();
     PageItem list[PAGE_LENGTH];

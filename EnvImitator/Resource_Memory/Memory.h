@@ -6,20 +6,27 @@
 #define OS_DISPATCHIMITATION_MEMORY_H
 
 #include "../../Kernel/PageFrame/PageFrame.h"
+#include <vector>
 
 class Memory {
 private:
-    int m_size;
-    PageFrame body[];
-
+    static const int INIT_MEMORY_SIZE = 128;
+    int m_size = INIT_MEMORY_SIZE;
+    PageFrame body[INIT_MEMORY_SIZE]{};
 public:
-    Memory(int);
+    Memory();
 
-    PageFrame* access_memory(int,int);
+    std::vector<int> free_set;
 
-    void exchange_frame(int,const PageFrame&);
+    PageFrame *access_memory(int phy_ad, int offset);
 
-    ~Memory();
+    void write_mem_frame(int phy_ad, const PageFrame &tar);
+
+    int req_new_mem();
+
+    void return_mem(int ad);
+
+//    ~Memory();
 };
 
 
