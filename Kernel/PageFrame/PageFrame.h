@@ -11,6 +11,8 @@ class PageFrame {
 public:
     int info;
     int id;
+
+    void disp_self() const;
 };
 
 

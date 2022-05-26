@@ -70,3 +70,41 @@ PageItem *PageLinkedList::de_work_node() {
 PageItem *PageLinkedList::_dsp_LRU(PageItem *tar) {
     return nullptr;
 }
+
+PageItem *PageLinkedList::dispatching(PageItem *tar) {
+
+
+    return nullptr;
+}
+
+void PageLinkedList::cut_node(PageLinkedList::pNode pos) {
+//    this function only clear the node but not to return the data
+    pos->next->prior = pos->prior;
+    pos->prior->next = pos->next;
+    this->WorkSetLen++;
+    delete pos;
+}
+
+void PageLinkedList::display_cur() const {
+    using namespace std;
+
+    pNode temp = this->head_WorkSet;
+    pNode iter = temp;
+
+    cout<<"remaining area:"<<this->WorkSetLen<<endl;
+
+    if(!temp){
+        cout<<"the list is empty"<<endl;
+        return;
+    }
+
+    cout<<"-----------------------"<<endl;
+
+    do {
+        cout<<"->"<<endl;
+        iter->data->disp_self();
+        iter = iter->next;
+    } while (iter != temp);
+
+    cout<<"-----------------------"<<endl;
+}

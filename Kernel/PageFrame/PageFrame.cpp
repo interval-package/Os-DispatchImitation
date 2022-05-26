@@ -3,3 +3,9 @@
 //
 
 #include "PageFrame.h"
+#include <iostream>
+
+void PageFrame::disp_self() const {
+    using namespace std;
+    cout<<"frame info disk ad: "<<this->id<<endl;
+}

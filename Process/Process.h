@@ -37,8 +37,10 @@ private:
 
     void dispatching(Exception_Page_Missing& e);
 
-    void write_mem_disk(PageItem* mem_item);
+//    使用页表项作为媒介，将内存内部的信息写入
+    void write_mem_to_disk(PageItem* mem_item);
 
+    void write_disk_to_mem(PageItem* old_mem, PageItem* new_mem);
 };
 
 

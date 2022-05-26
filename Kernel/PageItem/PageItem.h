@@ -32,6 +32,8 @@ public:
 // level means the type of this page, if -1 it means it's page
 // if level>0, it's a list
     int level = -1;
+
+    void disp_self() const;
 };
 
 
