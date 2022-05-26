@@ -9,12 +9,12 @@
 #include "../EnvImitator/Resource_Disk/Disk.h"
 
 class DispatchAction {
-public:
-    DispatchAction();
 
-
-private:
 };
 
+namespace dsp_methods
+{
+
+}
 
 #endif //OS_DISPATCHIMITATION_DISPATCHACTION_H

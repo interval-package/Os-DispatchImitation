@@ -24,7 +24,7 @@ public:
 
     int req_new_mem();
 
-    void return_mem(int ad);
+    PageFrame& return_mem(int ad);
 
 //    ~Memory();
 };

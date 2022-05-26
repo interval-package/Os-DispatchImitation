@@ -4,6 +4,3 @@
 
 #include "DispatchAction.h"
 
-DispatchAction::DispatchAction(){
-
-};

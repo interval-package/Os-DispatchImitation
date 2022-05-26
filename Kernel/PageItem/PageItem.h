@@ -25,6 +25,7 @@ public:
 
 //    使用回写法处理
     int isWritten = false;
+//    同时用于判断是否被访问，>0则必为true
     int accessTimes = 0;
     int recentAccess = -1;
 

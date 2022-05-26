@@ -23,7 +23,6 @@ public:
     Process(Memory *mem, Disk *disk, int WorkSpace);
 
     PageFrame* access_vir_ad(int pageId);
-    void Dispatching();
 
     void run(ACTIONS &tar);
 
@@ -35,6 +34,10 @@ private:
 //    获得对应的指针，内存指针应当有两个备份。
     Memory* process_mem;
     Disk* process_disk;
+
+    void dispatching(Exception_Page_Missing& e);
+
+    void write_mem_disk(PageItem* mem_item);
 
 };
 

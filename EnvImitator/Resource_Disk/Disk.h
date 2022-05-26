@@ -13,9 +13,9 @@ private:
 public:
     Disk();
 
-    PageFrame& access_disk(int);
+    PageFrame &access_disk(int ad);
 
-    void write_disk(int,const PageFrame&);
+    void write_disk(int ad, const PageFrame &frame);
 
     PageFrame body[];
 

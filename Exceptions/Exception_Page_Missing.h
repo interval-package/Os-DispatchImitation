@@ -10,8 +10,12 @@
 class Exception_Page_Missing: public std::exception{
 public:
 //    缺页中断必须要指出现在我们所希望访问的实际物理地址，用于传参
-    Exception_Page_Missing(int phyAd);
-    int tar_phy_ad;
+    explicit Exception_Page_Missing(int _block_ad, int _offset);
+//    int tar_phy_ad{};
+    int block_ad;
+    int offset;
+//    includes the error place we try to get
+    void disp_err() const;
 };
 
 
