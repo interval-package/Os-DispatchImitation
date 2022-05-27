@@ -33,7 +33,7 @@ private:
     Memory *mem;
 
 //    作为调度算法，要实现的是找到目标的位置
-    pNode _dsp_FIFO(PageItem* tar);
+    pNode _dsp_FIFO(PageItem* tar) const;
 
 //    PageItem* _dsp_LRU(PageItem* tar);
 

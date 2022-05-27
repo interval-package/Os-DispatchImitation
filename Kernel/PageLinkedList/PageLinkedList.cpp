@@ -13,15 +13,16 @@ WorkSetLen(len), mem(tar), _len(len)
 }
 
 PageLinkedList::~PageLinkedList() {
-    pNode temp = this->head_WorkSet, _temp;
+    pNode temp = this->head_WorkSet, _temp = nullptr;
 //    clear the space
-    while (temp){
+    while (_temp != this->head_WorkSet){
         _temp = temp->next;
         delete temp;
         temp = _temp;
     }
     temp = this->head_StaySet;
-    while (temp){
+    _temp = nullptr;
+    while (_temp != this->head_StaySet){
         _temp = temp->next;
         delete temp;
         temp = _temp;
@@ -48,6 +49,8 @@ void PageLinkedList::add_work_node(PageItem *tar) {
 }
 
 PageItem *PageLinkedList::de_work_node() {
+//    这个就完全是栈的操作了,会考虑到空的情况
+
     if(!this->head_WorkSet){
         throw Exception_BoundExceed();
     }
@@ -76,21 +79,25 @@ void PageLinkedList::cut_node(PageLinkedList::pNode pos) {
 
 PageItem *PageLinkedList::dispatching(PageItem *tar) {
 //    在调度函数中，我们所做的，只是
-    PageItem* res;
     if(this->WorkSetLen){
+        std::cout<<"adding node success"<<std::endl;
         this->add_work_node(tar);
         return nullptr;
     }
-
+    pNode old = _dsp_FIFO(tar);
+    PageItem* res = old->data;
+    this->cut_node(old);
+//    新来的节点都是头插
+    this->add_work_node(tar);
     return res;
 }
 
-PageLinkedList::pNode PageLinkedList::_dsp_FIFO(PageItem *tar) {
+PageLinkedList::pNode PageLinkedList::_dsp_FIFO(PageItem *tar) const {
 //    在核心调度算法中，我们不做，插入与删除的操作
 //    我们所做的,只是找出对应的节点指针,后面的操作交给外部包装函数
 //    我们保证,在这里我们的链表一定是满的
-
-    return nullptr;
+//    所以就很直接,返回尾巴就好了
+    return this->head_WorkSet->prior;
 }
 
 

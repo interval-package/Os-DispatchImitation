@@ -57,6 +57,19 @@ void Process::dispatching(Exception_Page_Missing &e) {
 //    进行调度，将被调度页的页表项换出，使用链表内部的调度算法
     PageItem *old = this->page_set.dispatching(temp);
 
+//    如果是新加页,则会返回一个空指针
+    if(!old){
+//        若为空指针,则不进行新的调度,直接写入
+//        应该写个接口的,但是这里还是先直接实现吧
+
+        int new_ad = this->process_mem->req_new_mem();
+        temp->memPhyAd = new_ad;
+        this->write_disk_to_mem(temp,temp);
+
+        temp->inMemory = true;
+        return;
+    }
+
 //    调用写回策略，如果有修改就写回磁盘
     if(old->isWritten){
         this->write_mem_to_disk(old);

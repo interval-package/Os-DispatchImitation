@@ -9,7 +9,7 @@ PageList::PageList() : PageFrame() {
 //    使用默认长度进行初始化
     this->len = PAGE_LENGTH;
 //    默认使用，顺序存储的地址信息
-    for(int i=0; i<PAGE_LENGTH; i++){
+    for(int i=0; i<this->len; i++){
         this->list[i].diskPhyAd = i;
     }
 }

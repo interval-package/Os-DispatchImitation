@@ -6,6 +6,14 @@
 using namespace std;
 
 int main() {
+    Memory mem;
+    Disk disk;
+    Process proc(&mem,&disk,16);
+
+//    将当前配置环境打印
+
+
+
     ACTIONS acts;
 //    设置访问序列
 
@@ -18,12 +26,6 @@ int main() {
             break;
         }
     }
-
-    Memory mem;
-    Disk disk;
-    Process proc(&mem,&disk,16);
-
-//    还需要初始化页表
 
 //    设置访问序列
     proc.run(acts);
