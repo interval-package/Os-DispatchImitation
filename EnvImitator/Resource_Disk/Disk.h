@@ -9,15 +9,21 @@
 
 class Disk {
 private:
-    int d_size;
+
+    static const int INIT_DISK_SIZE = 2048;
+
+    int d_size = INIT_DISK_SIZE;
+    PageFrame body[INIT_DISK_SIZE]{};
+
 public:
     Disk();
 
-    PageFrame &access_disk(int ad);
+//    获得磁盘页面实例，当调入内存时使用
+    PageFrame &get_disk_frame_instance(int ad);
 
-    void write_disk(int ad, const PageFrame &frame);
+    void write_disk_frame(int ad, const PageFrame &frame);
 
-    PageFrame body[];
+
 
 };
 

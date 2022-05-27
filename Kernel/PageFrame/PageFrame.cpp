@@ -7,5 +7,9 @@
 
 void PageFrame::disp_self() const {
     using namespace std;
-    cout<<"frame info disk ad: "<<this->id<<endl;
+    cout<<"frame info of disk ad: "<<this->id<<endl;
 }
+
+//PageFrame::PageFrame(int _id, int _info): id(_id), info(_info){
+//
+//}

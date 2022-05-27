@@ -26,6 +26,8 @@ public:
 
     void run(ACTIONS &tar);
 
+    void run();
+
 private:
     PageList list;
 //    使用页框链表，用于后续的调度算法

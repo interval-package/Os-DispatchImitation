@@ -5,7 +5,7 @@
 #include "PageLinkedList.h"
 
 PageLinkedList::PageLinkedList(int len, Memory *tar):
-WorkSetLen(len), mem(tar)
+WorkSetLen(len), mem(tar), _len(len)
 {
     this->head_WorkSet = nullptr;
     this->head_StaySet = nullptr;
@@ -44,10 +44,7 @@ void PageLinkedList::add_work_node(PageItem *tar) {
         temp->next = this->head_WorkSet;
         temp->prior = this->head_WorkSet;
     }
-}
-
-PageItem *PageLinkedList::_dsp_FIFO(PageItem *tar) {
-    return nullptr;
+    this->WorkSetLen--;
 }
 
 PageItem *PageLinkedList::de_work_node() {
@@ -64,26 +61,38 @@ PageItem *PageLinkedList::de_work_node() {
         this->head_WorkSet->prior->next = this->head_WorkSet;
         delete temp_node;
     }
+    this->WorkSetLen++;
     return res;
-}
-
-PageItem *PageLinkedList::_dsp_LRU(PageItem *tar) {
-    return nullptr;
-}
-
-PageItem *PageLinkedList::dispatching(PageItem *tar) {
-
-
-    return nullptr;
 }
 
 void PageLinkedList::cut_node(PageLinkedList::pNode pos) {
 //    this function only clear the node but not to return the data
+//    要注意的是,这个函数只在清理的时候,进行使用,也就是说会保证链表至少有两个以上的元素
     pos->next->prior = pos->prior;
     pos->prior->next = pos->next;
     this->WorkSetLen++;
     delete pos;
 }
+
+PageItem *PageLinkedList::dispatching(PageItem *tar) {
+//    在调度函数中，我们所做的，只是
+    PageItem* res;
+    if(this->WorkSetLen){
+        this->add_work_node(tar);
+        return nullptr;
+    }
+
+    return res;
+}
+
+PageLinkedList::pNode PageLinkedList::_dsp_FIFO(PageItem *tar) {
+//    在核心调度算法中，我们不做，插入与删除的操作
+//    我们所做的,只是找出对应的节点指针,后面的操作交给外部包装函数
+//    我们保证,在这里我们的链表一定是满的
+
+    return nullptr;
+}
+
 
 void PageLinkedList::display_cur() const {
     using namespace std;

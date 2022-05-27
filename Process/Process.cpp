@@ -26,6 +26,7 @@ PageFrame *Process::access_vir_ad(int ad) {
 Process::Process(Memory *mem, Disk *disk, int WorkSpace) :
 process_mem(mem),process_disk(disk),page_set(WorkSpace,mem)
 {
+
 }
 
 void Process::run(ACTIONS &tar) {
@@ -72,11 +73,35 @@ void Process::dispatching(Exception_Page_Missing &e) {
 
 void Process::write_mem_to_disk(PageItem *mem_item) {
 //    该函数要为内存与磁盘的友元函数，可以直接访问替换
-    PageFrame temp = this->process_mem->return_mem(mem_item->memPhyAd);
-    this->process_disk->write_disk(mem_item->diskPhyAd, temp);
+    PageFrame temp = this->process_mem->get_mem_frame_instance(mem_item->memPhyAd);
+    this->process_disk->write_disk_frame(mem_item->diskPhyAd, temp);
 }
 
 void Process::write_disk_to_mem(PageItem *old_mem, PageItem *new_mem) {
-    PageFrame temp = this->process_disk->access_disk(new_mem->diskPhyAd);
+    PageFrame temp = this->process_disk->get_disk_frame_instance(new_mem->diskPhyAd);
     this->process_mem->write_mem_frame(old_mem->memPhyAd,temp);
+}
+
+void Process::run() {
+    using namespace std;
+    PageFrame* temp;
+
+    int instruction;
+
+    while (cin>>instruction) {
+        cout<<"now is to access: "<<instruction<<endl;
+        try{
+//            尝试访问虚拟地址，如果访问成功则打印虚拟地址内容
+            temp = this->access_vir_ad(instruction);
+            temp->disp_self();
+        }
+        catch (Exception_Page_Missing& e) {
+//            打印错误，然后进入调度算法
+            e.disp_err();
+            this->dispatching(e);
+        }
+        catch (Exception_BoundExceed& e) {
+            cout<<"access invalid ad!"<<endl;
+        }
+    }
 }

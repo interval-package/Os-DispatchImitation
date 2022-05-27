@@ -9,6 +9,7 @@
 
 class PageFrame {
 public:
+//    explicit PageFrame(int _id, int _info=0);
     int info;
     int id;
 

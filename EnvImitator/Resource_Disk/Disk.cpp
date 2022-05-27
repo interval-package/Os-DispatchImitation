@@ -5,8 +5,15 @@
 #include "Disk.h"
 
 Disk::Disk() {
-    this->d_size = PAGE_LENGTH;
     for(int i=0; i<this->d_size; i++){
         this->body[i].id = i;
     }
+}
+
+PageFrame &Disk::get_disk_frame_instance(int ad) {
+    return this->body[ad];
+}
+
+void Disk::write_disk_frame(int ad, const PageFrame &frame) {
+    this->body[ad] = frame;
 }

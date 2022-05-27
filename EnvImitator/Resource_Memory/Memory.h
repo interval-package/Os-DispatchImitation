@@ -13,6 +13,7 @@ private:
     static const int INIT_MEMORY_SIZE = 128;
     int m_size = INIT_MEMORY_SIZE;
     PageFrame body[INIT_MEMORY_SIZE]{};
+
 public:
     Memory();
 
@@ -22,9 +23,11 @@ public:
 
     void write_mem_frame(int phy_ad, const PageFrame &tar);
 
+//    申请新的内存块
     int req_new_mem();
 
-    PageFrame& return_mem(int ad);
+//    获得某个特定块的实例，用于写回操作
+    PageFrame& get_mem_frame_instance(int ad);
 
 //    ~Memory();
 };

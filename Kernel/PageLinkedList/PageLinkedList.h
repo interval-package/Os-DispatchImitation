@@ -22,6 +22,7 @@ private:
     } Node, *pNode;
 
 //    使用这个长度来判断，链表是否为满
+    const int _len;
     int WorkSetLen;
 
 //    模拟队列操作，入队出队
@@ -31,12 +32,10 @@ private:
 //    内存对象，目前还没有明确用途
     Memory *mem;
 
-//    PageItem* (*_detail_dispatch)(PageItem* tar);
+//    作为调度算法，要实现的是找到目标的位置
+    pNode _dsp_FIFO(PageItem* tar);
 
-//    作为调度算法，要实现调度结果的插入与返回
-    PageItem* _dsp_FIFO(PageItem* tar);
-
-    PageItem* _dsp_LRU(PageItem* tar);
+//    PageItem* _dsp_LRU(PageItem* tar);
 
     void cut_node(pNode pos);
 
@@ -49,7 +48,7 @@ public:
 
     PageItem* dispatching(PageItem* tar);
 
-    void set_dispatch_type(char type);
+//    void set_dispatch_type(char type);
 
     ~PageLinkedList();
 
