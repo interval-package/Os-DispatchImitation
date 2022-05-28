@@ -11,6 +11,9 @@
 class PageItem {
 private:
     std::string info;
+
+
+
 //    PageFrame* tar;
 // 这里没有处理好，我们是要用什么
 public:
@@ -30,12 +33,17 @@ public:
     int accessTimes = -1;
     int recentAccess = -1;
 
+    void reset();
+
+    void init_set();
+
+    void accessed_action();
+
 // level means the type of this page, if -1 it means it's page
 // if level>0, it's a list
     int level = -1;
 
     void disp_self() const;
 };
-
 
 #endif //OS_DISPATCHIMITATION_PAGEITEM_H

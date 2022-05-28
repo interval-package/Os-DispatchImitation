@@ -84,23 +84,13 @@ PageItem *PageLinkedList::inner_dispatching(PageItem *tar) {
         this->add_work_node(tar);
         return nullptr;
     }
-    pNode old = _dsp_FIFO(tar);
+    pNode old = _dsp_FIFO();
     PageItem* res = old->data;
     this->cut_node(old);
 //    新来的节点都是头插
     this->add_work_node(tar);
     return res;
 }
-
-PageLinkedList::pNode PageLinkedList::_dsp_FIFO(PageItem *tar) const {
-//    在核心调度算法中，我们不做，插入与删除的操作
-//    我们所做的,只是找出对应的节点指针,后面的操作交给外部包装函数
-//    我们保证,在这里我们的链表一定是满的
-//    所以就很直接,返回尾巴就好了
-    std::cout<<"processing FIFO method."<<std::endl;
-    return this->head_WorkSet->prior;
-}
-
 
 void PageLinkedList::display_cur() const {
     using namespace std;
@@ -126,3 +116,89 @@ void PageLinkedList::display_cur() const {
 
     cout<<"-----------------------"<<endl;
 }
+
+PageLinkedList::pNode PageLinkedList::_dsp_FIFO() const {
+//    所以就很直接,返回尾巴就好了
+    std::cout<<"processing FIFO method."<<std::endl;
+    return this->head_WorkSet->prior;
+}
+
+PageLinkedList::pNode PageLinkedList::_dsp_LRU() const {
+    std::cout<<"processing LRU method."<<std::endl;
+    pNode temp, judge, res;
+    res = judge = this->head_WorkSet;
+    temp = judge->next;
+
+    int pivot = judge->data->recentAccess;
+
+    while (temp!=judge){
+        if(temp->data->recentAccess < pivot){
+            res = temp;
+            pivot = temp->data->recentAccess;
+        }
+        temp=temp->next;
+    }
+    return res;
+}
+
+PageLinkedList::pNode PageLinkedList::_dsp_LFU() const {
+    std::cout<<"processing LFU method."<<std::endl;
+    pNode temp, judge, res;
+    res = judge = this->head_WorkSet;
+    temp = judge->next;
+
+    int pivot = judge->data->accessTimes;
+
+    while (temp!=judge){
+        if(temp->data->accessTimes < pivot){
+            res = temp;
+            pivot = temp->data->accessTimes;
+        }
+        temp=temp->next;
+    }
+    return res;
+}
+
+PageLinkedList::pNode PageLinkedList::_dsp_clock() const {
+    std::cout<<"processing clock method."<<std::endl;
+    pNode temp, res;
+    temp = this->head_WorkSet;
+
+    while (temp->data->accessTimes){
+        temp->data->accessTimes = 0;
+        temp = temp->prior;
+    }
+
+    res = temp;
+    return res;
+}
+
+PageLinkedList::pNode PageLinkedList::_dsp_advClock() const {
+//    改进时钟算法，做最多四次遍历
+    std::cout<<"processing LFU method."<<std::endl;
+    pNode temp, judge, res;
+    judge = this->head_WorkSet;
+    temp = judge;
+
+    for(int i=0; i<2; i++){
+        do {
+            if(!temp->data->isWritten && !temp->data->accessTimes){
+                return temp;
+            }
+            temp=temp->next;
+        } while (temp!=judge);
+
+        do {
+            if(temp->data->isWritten && !temp->data->accessTimes){
+                return temp;
+            }
+            temp->data->accessTimes = 0;
+            temp=temp->next;
+        } while (temp!=judge);
+
+    }
+
+    return temp;
+}
+
+

@@ -27,17 +27,30 @@ private:
 
 //    模拟队列操作，入队出队
     void add_work_node(PageItem* tar);
+    void cut_node(pNode pos);
     PageItem* de_work_node();
 
 //    内存对象，目前还没有明确用途
     Memory *mem;
 
 //    作为调度算法，要实现的是找到目标的位置
-    pNode _dsp_FIFO(PageItem* tar) const;
+//    在核心调度算法中，我们不做，插入与删除的操作
+//    我们所做的,只是找出对应的节点指针,后面的操作交给外部包装函数
+//    我们保证,在这里我们的链表一定是满的
+    pNode _dsp_FIFO() const;
 
-//    PageItem* _dsp_LRU(PageItem* tar);
+    pNode _dsp_LRU() const;
 
-    void cut_node(pNode pos);
+    pNode _dsp_LFU() const;
+
+    pNode _dsp_clock() const;
+
+    pNode _dsp_advClock() const;
+
+//    pNode _dsp_WorkSet() const;
+//
+//    pNode _dsp_wsClock() const;
+
 
 public:
     PageLinkedList(int len, Memory* tar);
@@ -55,6 +68,5 @@ public:
     void display_cur() const;
 
 };
-
 
 #endif //OS_DISPATCHIMITATION_PAGELINKEDLIST_H

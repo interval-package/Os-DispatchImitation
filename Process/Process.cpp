@@ -15,8 +15,8 @@ PageFrame *Process::access_vir_ad(int ad) {
 
     if(tar->inMemory){
 //        访问的实际结果在这里，在access_memory里面进行打印
-        tar->accessTimes++;
-//        tar->recentAccess =
+        tar->accessed_action();
+        tar->disp_self();
         return this->process_mem->access_memory(tar->memPhyAd, offset);
     }else{
         throw Exception_Page_Missing(tar, pageId, offset);
@@ -35,11 +35,11 @@ void Process::run(ACTIONS &tar) {
         try{
 //            尝试访问虚拟地址，如果访问成功则打印虚拟地址内容
             temp = this->access_vir_ad(iter);
-            temp->disp_self();
         }
         catch (Exception_Page_Missing& e) {
 //            打印错误，然后进入调度算法
             e.disp_err();
+//            调度过后默认会进行访问
             this->dispatching(e);
         }
         cout<<"--------------------------"<<endl;
@@ -90,8 +90,7 @@ void Process::dispatching(Exception_Page_Missing &e) {
         temp->memPhyAd = new_ad;
         this->write_disk_to_mem(temp,temp);
 
-        temp->inMemory = true;
-        temp->accessTimes = -1;
+        temp->init_set();
         this->process_mem->access_memory(temp->memPhyAd,e.offset);
         return;
     }
@@ -108,10 +107,8 @@ void Process::dispatching(Exception_Page_Missing &e) {
     write_disk_to_mem(old, temp);
 
 //    修改内容，将目标页表项的内容，修改到
-    old->accessTimes = -1;
-    temp->accessTimes = 0;
-    old->inMemory = false;
-    temp->inMemory = true;
+    old->reset();
+    temp->init_set();
 
     this->process_mem->access_memory(temp->memPhyAd,e.offset);
 }
