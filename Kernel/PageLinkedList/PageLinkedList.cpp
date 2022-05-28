@@ -77,7 +77,7 @@ void PageLinkedList::cut_node(PageLinkedList::pNode pos) {
     delete pos;
 }
 
-PageItem *PageLinkedList::dispatching(PageItem *tar) {
+PageItem *PageLinkedList::inner_dispatching(PageItem *tar) {
 //    在调度函数中，我们所做的，只是
     if(this->WorkSetLen){
         std::cout<<"adding node success"<<std::endl;
@@ -97,6 +97,7 @@ PageLinkedList::pNode PageLinkedList::_dsp_FIFO(PageItem *tar) const {
 //    我们所做的,只是找出对应的节点指针,后面的操作交给外部包装函数
 //    我们保证,在这里我们的链表一定是满的
 //    所以就很直接,返回尾巴就好了
+    std::cout<<"processing FIFO method."<<std::endl;
     return this->head_WorkSet->prior;
 }
 
@@ -107,6 +108,7 @@ void PageLinkedList::display_cur() const {
     pNode temp = this->head_WorkSet;
     pNode iter = temp;
 
+    cout<<"displaying link detail"<<endl;
     cout<<"remaining area:"<<this->WorkSetLen<<endl;
 
     if(!temp){
@@ -114,7 +116,7 @@ void PageLinkedList::display_cur() const {
         return;
     }
 
-    cout<<"-----------------------"<<endl;
+    cout<<"-----------------------\nthe detail:"<<endl;
 
     do {
         cout<<"->"<<endl;

@@ -8,6 +8,7 @@
 
 void PageItem::disp_self() const {
     using namespace std;
-    cout<<"in the memory of "<<this->memPhyAd<<" and "<<(this->isWritten?"is Written":"not Writen")
-    <<endl;
+    cout<<"in the memory of "<<this->memPhyAd<<" disk of "<<this->diskPhyAd
+    <<" and "<<(this->isWritten?"is Written":"not Writen")
+    <<"; Be accessed "<<this->accessTimes<<" times"<<endl;
 }

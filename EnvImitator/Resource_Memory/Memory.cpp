@@ -3,8 +3,10 @@
 //
 
 #include "Memory.h"
+#include <iostream>
 
 PageFrame *Memory::access_memory(int phy_ad, int offset) {
+    std::cout<<"access memory at "<<phy_ad<<", with offset "<<offset<<std::endl;
     return &this->body[phy_ad];
 }
 

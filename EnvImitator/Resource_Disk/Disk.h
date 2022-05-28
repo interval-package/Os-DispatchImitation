@@ -8,13 +8,6 @@
 #include "../../Kernel/PageFrame/PageFrame.h"
 
 class Disk {
-private:
-
-    static const int INIT_DISK_SIZE = 2048;
-
-    int d_size = INIT_DISK_SIZE;
-    PageFrame body[INIT_DISK_SIZE]{};
-
 public:
     Disk();
 
@@ -24,6 +17,11 @@ public:
     void write_disk_frame(int ad, const PageFrame &frame);
 
 
+    static const int INIT_DISK_SIZE = 2048;
+
+private:
+    int d_size = INIT_DISK_SIZE;
+    PageFrame body[INIT_DISK_SIZE]{};
 
 };
 

@@ -18,7 +18,7 @@ public:
     explicit PageItem()= default;
 
 // we define the length of every page frame
-    const static int PageLen = 1024;
+//    const static int PageLen = 1024;
     int memPhyAd = -1;
     int diskPhyAd = -1;
     bool inMemory = false;
@@ -26,7 +26,8 @@ public:
 //    使用回写法处理
     int isWritten = false;
 //    同时用于判断是否被访问，>0则必为true
-    int accessTimes = 0;
+//    再调入时，进行初始化，变为0，我们是否访问指的是被调入后是否访问。
+    int accessTimes = -1;
     int recentAccess = -1;
 
 // level means the type of this page, if -1 it means it's page

@@ -9,12 +9,9 @@
 #include <vector>
 
 class Memory {
-private:
-    static const int INIT_MEMORY_SIZE = 128;
-    int m_size = INIT_MEMORY_SIZE;
-    PageFrame body[INIT_MEMORY_SIZE]{};
-
 public:
+    static const int INIT_MEMORY_SIZE = 128;
+
     Memory();
 
     std::vector<int> free_set;
@@ -30,6 +27,9 @@ public:
     PageFrame& get_mem_frame_instance(int ad);
 
 //    ~Memory();
+private:
+    int m_size = INIT_MEMORY_SIZE;
+    PageFrame body[INIT_MEMORY_SIZE]{};
 };
 
 

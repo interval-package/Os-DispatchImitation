@@ -18,7 +18,9 @@ public:
 
     explicit PageList(int _len);
 
-    PageItem list[PAGE_LENGTH];
+    static const int LIST_LENGTH = 16;
+
+    PageItem list[LIST_LENGTH];
 
     int len;
 

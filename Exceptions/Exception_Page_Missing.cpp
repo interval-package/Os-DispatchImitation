@@ -6,7 +6,7 @@
 #include <iostream>
 
 void Exception_Page_Missing::disp_err() const {
-    std::cout << "Page missing break! at " << this->block_ad << std::endl;
+    std::cout << "Page missing break! at block " << this->block_ad << std::endl;
 }
 
 Exception_Page_Missing::Exception_Page_Missing(PageItem *tar, int _ad, int _offset)

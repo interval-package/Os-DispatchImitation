@@ -46,7 +46,7 @@ public:
     Node* head_WorkSet;
     Node* head_StaySet;
 
-    PageItem* dispatching(PageItem* tar);
+    PageItem* inner_dispatching(PageItem* tar);
 
 //    void set_dispatch_type(char type);
 

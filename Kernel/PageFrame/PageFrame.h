@@ -5,13 +5,14 @@
 #ifndef OS_DISPATCHIMITATION_PAGEFRAME_H
 #define OS_DISPATCHIMITATION_PAGEFRAME_H
 
-#define PAGE_LENGTH 1024
+
 
 class PageFrame {
 public:
+    static const int PAGE_LENGTH=1024;
 //    explicit PageFrame(int _id, int _info=0);
-    int info;
-    int id;
+    int info = 0;
+    int id =0;
 
     void disp_self() const;
 };
