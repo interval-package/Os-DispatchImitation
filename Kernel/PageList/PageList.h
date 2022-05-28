@@ -28,7 +28,7 @@ public:
 
 //    void randomly_init_list();
 
-    void disp_self();
+//    void disp_self();
 
 };
 

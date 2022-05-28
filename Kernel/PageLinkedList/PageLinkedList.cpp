@@ -71,9 +71,15 @@ PageItem *PageLinkedList::de_work_node() {
 void PageLinkedList::cut_node(PageLinkedList::pNode pos) {
 //    this function only clear the node but not to return the data
 //    要注意的是,这个函数只在清理的时候,进行使用,也就是说会保证链表至少有两个以上的元素
+
     pos->next->prior = pos->prior;
     pos->prior->next = pos->next;
     this->WorkSetLen++;
+
+    if(pos == this->head_WorkSet){
+        this->head_WorkSet = pos->next;
+    }
+
     delete pos;
 }
 
@@ -84,7 +90,26 @@ PageItem *PageLinkedList::inner_dispatching(PageItem *tar) {
         this->add_work_node(tar);
         return nullptr;
     }
-    pNode old = _dsp_FIFO();
+    pNode old;
+    switch (_dsp_type) {
+        case 'i':{
+            old = _dsp_FIFO();
+            break;
+        }
+        case 'r':{
+            old = _dsp_LRU();
+            break;
+        }
+        case 'f':{
+            old = _dsp_LFU();
+            break;
+        }
+        case 'c':{
+            old = _dsp_clock();
+            break;
+        }
+        default: old = _dsp_FIFO();
+    }
     PageItem* res = old->data;
     this->cut_node(old);
 //    新来的节点都是头插
@@ -98,6 +123,7 @@ void PageLinkedList::display_cur() const {
     pNode temp = this->head_WorkSet;
     pNode iter = temp;
 
+    cout<<"**********************"<<endl;
     cout<<"displaying link detail"<<endl;
     cout<<"remaining area:"<<this->WorkSetLen<<endl;
 
@@ -106,7 +132,7 @@ void PageLinkedList::display_cur() const {
         return;
     }
 
-    cout<<"-----------------------\nthe detail:"<<endl;
+    cout<<"the detail:"<<endl;
 
     do {
         cout<<"->"<<endl;
@@ -114,7 +140,7 @@ void PageLinkedList::display_cur() const {
         iter = iter->next;
     } while (iter != temp);
 
-    cout<<"-----------------------"<<endl;
+    cout<<"**********************"<<endl;
 }
 
 PageLinkedList::pNode PageLinkedList::_dsp_FIFO() const {

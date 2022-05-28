@@ -41,6 +41,7 @@ void Process::run(ACTIONS &tar) {
             e.disp_err();
 //            调度过后默认会进行访问
             this->dispatching(e);
+            this->page_set.display_cur();
         }
         cout<<"--------------------------"<<endl;
     }
