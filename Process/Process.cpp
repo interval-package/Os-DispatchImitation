@@ -41,7 +41,7 @@ void Process::run(ACTIONS &tar) {
             e.disp_err();
 //            调度过后默认会进行访问
             this->dispatching(e);
-            this->page_set.display_cur();
+//            this->page_set.display_cur();
         }
         cout<<"--------------------------"<<endl;
     }
@@ -54,7 +54,12 @@ void Process::run() {
 
     int instruction;
 
+    cout<<"please input your tar ad: ";
+
     while (cin>>instruction) {
+
+        if (instruction<0) break;
+
         cout<<"now is to access: "<<instruction<<endl;
         try{
 //            尝试访问虚拟地址，如果访问成功则打印虚拟地址内容
@@ -69,6 +74,8 @@ void Process::run() {
         catch (Exception_BoundExceed& e) {
             cout<<"access invalid ad!"<<endl;
         }
+        cout<<"--------------------------"<<endl;
+        cout<<"please input your tar ad: ";
     }
 }
 

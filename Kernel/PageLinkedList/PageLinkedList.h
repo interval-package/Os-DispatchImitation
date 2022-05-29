@@ -33,8 +33,24 @@ private:
 //    内存对象，目前还没有明确用途
     Memory *mem;
 
+public:
+    PageLinkedList(int len, Memory* tar);
+
     char _dsp_type = 'f';
 
+//    做了一个双向链表作为模拟
+    Node* head_WorkSet;
+    Node* head_StaySet;
+
+    PageItem* inner_dispatching(PageItem* tar);
+
+//    void set_dispatch_type(char type);
+
+    ~PageLinkedList();
+
+    void display_cur() const;
+
+private:
 
 //    作为调度算法，要实现的是找到目标的位置
 //    在核心调度算法中，我们不做，插入与删除的操作
@@ -53,22 +69,6 @@ private:
 //    pNode _dsp_WorkSet() const;
 //
 //    pNode _dsp_wsClock() const;
-
-
-public:
-    PageLinkedList(int len, Memory* tar);
-
-//    做了一个双向链表作为模拟
-    Node* head_WorkSet;
-    Node* head_StaySet;
-
-    PageItem* inner_dispatching(PageItem* tar);
-
-//    void set_dispatch_type(char type);
-
-    ~PageLinkedList();
-
-    void display_cur() const;
 
 };
 

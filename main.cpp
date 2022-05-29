@@ -27,6 +27,8 @@ int main() {
 
     int act;
 
+    cout<<"please input a series of tar ad: ";
+
     while (cin>>act){
         if (act > 0){
             acts.push_back(act);
@@ -38,6 +40,7 @@ int main() {
 //    设置访问序列
     proc.run(acts);
 
+    proc.run();
 
     return 0;
 }
