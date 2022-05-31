@@ -54,11 +54,18 @@ void Process::run() {
 
     int instruction;
 
-    cout<<"please input your tar ad: ";
+    cout<<"please input your tar ad(minus ad will redirect to commands): ";
 
     while (cin>>instruction) {
 
-        if (instruction<0) break;
+        if (instruction<0){
+            if(instruction>=-5){
+                this->page_set.display_cur();
+                continue;
+            } else{
+                break;
+            }
+        }
 
         cout<<"now is to access: "<<instruction<<endl;
         try{

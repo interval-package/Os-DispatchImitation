@@ -27,7 +27,7 @@ int main() {
 
     int act;
 
-    cout<<"please input a series of tar ad: ";
+    cout<<"please input a series of tar ad(end with -1): ";
 
     while (cin>>act){
         if (act > 0){
