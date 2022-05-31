@@ -4,80 +4,12 @@
 
 #include "sleeping_barber.h"
 
-#ifndef DATASTRUCTUREIMPLEMENTINGC_BANKERRESOURCEDISPATCH_H
-#define DATASTRUCTUREIMPLEMENTINGC_BANKERRESOURCEDISPATCH_H
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <cstdlib>
+#include <cstdio>
+//#include <stdbool.h>
 //#include <pthread.h>
 
-// init count of resource type
-#define M 3
-// init count of process
-#define N 2
-
-typedef struct Condition{
-    int available[M];
-//    可选的，主要是在开始的时候初始化用
-    int max[N][M];
-    int need[N][M];
-    int allocation[N][M];
-    volatile int request[M];
-    int cur;
-    int n;
-    int m;
-} Condition, *pCond;
-//int need[i][j] = Max[i][j]- Allocation[i][j]
-
-#define ACT_TIMES 10
-
-typedef struct Actions{
-    int processId;
-    int request[M];
-}Actions, *acts;
-
-// global var
-//static Condition CurCond;
-
-bool InitCond(pCond cond);
-
-bool DisplayCurCond(pCond cond);
-
-// Banker actions
-
-bool UpdateCond(pCond, acts);
-
-bool BankerEvaluate(pCond);
-
-bool preAllocate(pCond);
-
-bool RollBack(pCond);
-
-bool Commit(pCond);
-
-//======================================================================================================================
-
-// safety method
-
-typedef struct SafetyWork{
-    int work[M];
-    bool finished[N];
-} sfWork;
-
-bool SafetyCertification(pCond cond);
-
-bool sfWorkInit(sfWork*, pCond);
-
-bool FindAndAlloc(sfWork* jud, pCond cond);
-
-bool EndPhaseJudge(sfWork* jud, pCond cond);
-
-//======================================================================================================================
-
-#ifndef MAIN_FUNC
-#define MAIN_FUNC
-void test_main(){
+void sleeping_barber::test_main(){
     Condition cond;
     InitCond(&cond);
     cond.available[0] = 2;
@@ -100,11 +32,10 @@ void test_main(){
     }
 
 }
-#endif
 
 //======================================================================================================================
 
-bool InitCond(pCond cond){
+bool sleeping_barber::InitCond(pCond cond){
     cond->cur = 0;
     cond->n = N;
     cond->m = M;
@@ -120,7 +51,7 @@ bool InitCond(pCond cond){
     return true;
 }
 
-bool DisplayCurCond(pCond cond){
+bool sleeping_barber::DisplayCurCond(pCond cond){
     printf("avail: ");
     for(int j=0;j<cond->m;j++){
         printf("%d\t",cond->available[j]);
@@ -131,7 +62,7 @@ bool DisplayCurCond(pCond cond){
 
 //======================================================================================================================
 
-bool BankerEvaluate(pCond cond){
+bool sleeping_barber::BankerEvaluate(pCond cond){
 //    输入检验与预分配
     if(!preAllocate(cond))return false;
 
@@ -147,7 +78,7 @@ bool BankerEvaluate(pCond cond){
     return true;
 }
 
-bool preAllocate(pCond cond){
+bool sleeping_barber::preAllocate(pCond cond){
     // 申请检验
     for(int i=0; i<cond->m; i++){
         if(cond->available[i] < cond->request[i] // 是否有剩余的空间给予分配
@@ -166,7 +97,7 @@ bool preAllocate(pCond cond){
     return true;
 }
 
-bool UpdateCond(pCond cond, acts act){
+bool sleeping_barber::UpdateCond(pCond cond, acts act){
     cond->cur = act->processId;
     printf("get request of %d:\n",act->processId);
     for(int i=0; i<M; i++){
@@ -177,7 +108,7 @@ bool UpdateCond(pCond cond, acts act){
     return true;
 }
 
-bool RollBack(pCond cond){
+bool sleeping_barber::RollBack(pCond cond){
     for(int i=0; i<M; i++){
         cond->allocation[cond->cur][i] -= cond->request[i];
         cond->need[cond->cur][i] += cond->request[i];
@@ -185,7 +116,7 @@ bool RollBack(pCond cond){
     return true;
 }
 
-bool Commit(pCond cond){
+bool sleeping_barber::Commit(pCond cond){
     for(int i=0; i<M; i++){
         cond->available[i] -= cond->request[i];
     }
@@ -196,7 +127,7 @@ bool Commit(pCond cond){
 
 // safety method
 
-bool SafetyCertification(pCond cond){
+bool sleeping_barber::SafetyCertification(pCond cond){
     sfWork jud;
     sfWorkInit(&jud, cond);
 // 首先是找到一个没有完成的进程，把资源全部分配给它
@@ -204,7 +135,7 @@ bool SafetyCertification(pCond cond){
     return EndPhaseJudge(&jud,cond);
 }
 
-bool sfWorkInit(sfWork* jud, pCond cond){
+bool sleeping_barber::sfWorkInit(sfWork* jud, pCond cond){
     for(int i=0;i<M;i++){
         jud->work[i] = cond->available[i];
     }
@@ -215,7 +146,7 @@ bool sfWorkInit(sfWork* jud, pCond cond){
 }
 
 
-bool FindAndAlloc(sfWork* jud, pCond cond){
+bool sleeping_barber::FindAndAlloc(sfWork* jud, pCond cond){
     for(int i=0, j; i<cond->n; i++){
         if(!jud->finished[i]){
             for(j=0; j<M && cond->need[i][j] < jud->work[j]; j++);
@@ -229,7 +160,7 @@ bool FindAndAlloc(sfWork* jud, pCond cond){
     return false;
 }
 
-bool EndPhaseJudge(sfWork* jud, pCond cond){
+bool sleeping_barber::EndPhaseJudge(sfWork* jud, pCond cond){
     for(int i=0; i<cond->n; i++){
         if(!jud->finished[i]){
             return false;
@@ -238,4 +169,3 @@ bool EndPhaseJudge(sfWork* jud, pCond cond){
     return true;
 }
 
-#endif //DATASTRUCTUREIMPLEMENTINGC_BANKERRESOURCEDISPATCH_H

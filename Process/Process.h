@@ -8,8 +8,6 @@
 #include "../EnvImitator/Resource_Memory/Memory.h"
 #include "../EnvImitator/Resource_Disk/Disk.h"
 
-#include "../DispatchAction/DispatchAction.h"
-
 #include "../Kernel/PageLinkedList/PageLinkedList.h"
 #include "../Kernel/PageList/PageList.h"
 
@@ -18,16 +16,19 @@ typedef std::vector<int> ACTIONS;
 class Process {
 public:
 
-    int mem_valid_size = 64;
+    Process(Memory *mem, Disk *disk, int workspace_size);
 
-    Process(Memory *mem, Disk *disk, int WorkSpace);
+    PageFrame* access_vir_ad_R(int ad);
 
-    PageFrame* access_vir_ad(int pageId);
+    PageFrame* access_vir_ad_RW(int ad, bool is_write);
 
     void run(ACTIONS &tar);
 
     void run();
 
+    void single_step(int ad, bool is_write);
+
+    int id;
 private:
     PageList list;
 //    使用页框链表，用于后续的调度算法

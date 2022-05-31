@@ -6,7 +6,10 @@
 #include "Process.h"
 #include <ctime>
 
-PageFrame *Process::access_vir_ad(int ad) {
+// 自动分配的全局化id
+int global_id = 0;
+
+PageFrame *Process::access_vir_ad_R(int ad) {
 //    返回值实际上没有用
     int pageId = ad / PageFrame::PAGE_LENGTH;
     int offset = ad % PageFrame::PAGE_LENGTH;
@@ -23,9 +26,29 @@ PageFrame *Process::access_vir_ad(int ad) {
     }
 }
 
-Process::Process(Memory *mem, Disk *disk, int WorkSpace) :
-process_mem(mem),process_disk(disk),page_set(WorkSpace,mem)
-{}
+PageFrame *Process::access_vir_ad_RW(int ad, bool is_write) {
+//    返回值实际上没有用
+    int pageId = ad / PageFrame::PAGE_LENGTH;
+    int offset = ad % PageFrame::PAGE_LENGTH;
+
+    PageItem* tar = this->list.pageAccess(pageId);
+
+    if(tar->inMemory){
+//        访问的实际结果在这里，在access_memory里面进行打印
+        tar->accessed_action();
+        tar->disp_self();
+        return this->process_mem->access_memory(tar->memPhyAd, offset);
+    }else{
+        throw Exception_Page_Missing(tar, pageId, offset);
+    }
+}
+
+
+Process::Process(Memory *mem, Disk *disk, int workspace_size) :
+process_mem(mem),process_disk(disk),page_set(workspace_size, mem),id(global_id)
+{
+    std::cout<<"init process with global_id = "<<global_id++<<std::endl;
+}
 
 void Process::run(ACTIONS &tar) {
     using namespace std;
@@ -34,7 +57,7 @@ void Process::run(ACTIONS &tar) {
         cout<<"now is to access: "<<iter<<endl;
         try{
 //            尝试访问虚拟地址，如果访问成功则打印虚拟地址内容
-            temp = this->access_vir_ad(iter);
+            temp = this->access_vir_ad_R(iter);
         }
         catch (Exception_Page_Missing& e) {
 //            打印错误，然后进入调度算法
@@ -42,6 +65,7 @@ void Process::run(ACTIONS &tar) {
 //            调度过后默认会进行访问
             this->dispatching(e);
 //            this->page_set.display_cur();
+            temp = this->access_vir_ad_R(iter);
         }
         cout<<"--------------------------"<<endl;
     }
@@ -70,19 +94,42 @@ void Process::run() {
         cout<<"now is to access: "<<instruction<<endl;
         try{
 //            尝试访问虚拟地址，如果访问成功则打印虚拟地址内容
-            temp = this->access_vir_ad(instruction);
+            temp = this->access_vir_ad_R(instruction);
             temp->disp_self();
         }
         catch (Exception_Page_Missing& e) {
 //            打印错误，然后进入调度算法
             e.disp_err();
             this->dispatching(e);
+
+            temp = this->access_vir_ad_R(instruction);
         }
         catch (Exception_BoundExceed& e) {
             cout<<"access invalid ad!"<<endl;
         }
         cout<<"--------------------------"<<endl;
         cout<<"please input your tar ad: ";
+    }
+}
+
+void Process::single_step(int ad, bool is_write) {
+    using namespace std;
+
+    PageFrame* temp;
+
+    cout<<"now is to access: "<<ad<<endl;
+    try{
+//            尝试访问虚拟地址，如果访问成功则打印虚拟地址内容
+        temp = this->access_vir_ad_RW(ad, is_write);
+        temp->disp_self();
+    }
+    catch (Exception_Page_Missing& e) {
+//            打印错误，然后进入调度算法
+        e.disp_err();
+        this->dispatching(e);
+    }
+    catch (Exception_BoundExceed& e) {
+        cout<<"access invalid ad!"<<endl;
     }
 }
 
@@ -125,7 +172,7 @@ void Process::dispatching(Exception_Page_Missing &e) {
     old->reset();
     temp->init_set();
 
-    this->process_mem->access_memory(temp->memPhyAd,e.offset);
+//    this->process_mem->access_memory(temp->memPhyAd,e.offset);
 }
 
 void Process::write_mem_to_disk(PageItem *mem_item) {
@@ -139,3 +186,6 @@ void Process::write_disk_to_mem(PageItem *old_mem, PageItem *new_mem) {
     PageFrame temp = this->process_disk->get_disk_frame_instance(new_mem->diskPhyAd);
     this->process_mem->write_mem_frame(old_mem->memPhyAd,temp);
 }
+
+
+
