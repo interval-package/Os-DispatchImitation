@@ -2,7 +2,7 @@
 #include "./Kernel/PageLinkedList/PageLinkedList.h"
 #include "Process/Process.h"
 
-#include "DispatchAction/DispatchAction.h"
+#include "Threading_Pack/Thread_Proc_Wrapper.h"
 
 #include <thread>
 
@@ -24,7 +24,7 @@ int main() {
 
     disp_init_interface();
 
-    main_without_thread(mem,disk);
+//    main_without_thread(mem,disk);
 
     main_with_thread(mem,disk);
 
@@ -57,6 +57,24 @@ void main_without_thread(Memory &mem,Disk &disk){
 }
 
 void main_with_thread(Memory &mem,Disk &disk){
+    Thread_Proc_Wrapper proc1(&mem, &disk, work_space);
+    Thread_Proc_Wrapper proc2(&mem, &disk, work_space);
+    Thread_Proc_Wrapper proc3(&mem, &disk, work_space);
+
+    proc1.input_ad_series();
+    proc2.input_ad_series();
+    proc3.input_ad_series();
+
+    cout<<endl;
+
+//    c++，要是使用引用类型的传参会有问题的，所以不行
+    thread th1(Thread_Proc_Wrapper::outer_run, proc1);
+    thread th2(Thread_Proc_Wrapper::outer_run, proc2);
+    thread th3(Thread_Proc_Wrapper::outer_run, proc3);
+
+    th1.join();
+    th2.join();
+    th3.join();
 
 }
 

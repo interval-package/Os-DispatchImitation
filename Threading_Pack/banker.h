@@ -2,15 +2,15 @@
 // Created by Zza on 2022/5/31.
 //
 
-#ifndef OS_DISPATCHIMITATION_SLEEPING_BARBER_H
-#define OS_DISPATCHIMITATION_SLEEPING_BARBER_H
+#ifndef OS_DISPATCHIMITATION_BANKER_H
+#define OS_DISPATCHIMITATION_BANKER_H
 
 // init count of resource type
 #define M 3
 // init count of process
 #define N 2
 
-class sleeping_barber {
+class banker {
 public:
 
     void test_main();
@@ -75,4 +75,4 @@ private:
 };
 
 
-#endif //OS_DISPATCHIMITATION_SLEEPING_BARBER_H
+#endif //OS_DISPATCHIMITATION_BANKER_H

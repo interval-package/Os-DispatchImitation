@@ -2,14 +2,14 @@
 // Created by Zza on 2022/5/31.
 //
 
-#include "sleeping_barber.h"
+#include "banker.h"
 
 #include <cstdlib>
 #include <cstdio>
 //#include <stdbool.h>
 //#include <pthread.h>
 
-void sleeping_barber::test_main(){
+void banker::test_main(){
     Condition cond;
     InitCond(&cond);
     cond.available[0] = 2;
@@ -35,7 +35,7 @@ void sleeping_barber::test_main(){
 
 //======================================================================================================================
 
-bool sleeping_barber::InitCond(pCond cond){
+bool banker::InitCond(pCond cond){
     cond->cur = 0;
     cond->n = N;
     cond->m = M;
@@ -51,7 +51,7 @@ bool sleeping_barber::InitCond(pCond cond){
     return true;
 }
 
-bool sleeping_barber::DisplayCurCond(pCond cond){
+bool banker::DisplayCurCond(pCond cond){
     printf("avail: ");
     for(int j=0;j<cond->m;j++){
         printf("%d\t",cond->available[j]);
@@ -62,7 +62,7 @@ bool sleeping_barber::DisplayCurCond(pCond cond){
 
 //======================================================================================================================
 
-bool sleeping_barber::BankerEvaluate(pCond cond){
+bool banker::BankerEvaluate(pCond cond){
 //    输入检验与预分配
     if(!preAllocate(cond))return false;
 
@@ -78,7 +78,7 @@ bool sleeping_barber::BankerEvaluate(pCond cond){
     return true;
 }
 
-bool sleeping_barber::preAllocate(pCond cond){
+bool banker::preAllocate(pCond cond){
     // 申请检验
     for(int i=0; i<cond->m; i++){
         if(cond->available[i] < cond->request[i] // 是否有剩余的空间给予分配
@@ -97,7 +97,7 @@ bool sleeping_barber::preAllocate(pCond cond){
     return true;
 }
 
-bool sleeping_barber::UpdateCond(pCond cond, acts act){
+bool banker::UpdateCond(pCond cond, acts act){
     cond->cur = act->processId;
     printf("get request of %d:\n",act->processId);
     for(int i=0; i<M; i++){
@@ -108,7 +108,7 @@ bool sleeping_barber::UpdateCond(pCond cond, acts act){
     return true;
 }
 
-bool sleeping_barber::RollBack(pCond cond){
+bool banker::RollBack(pCond cond){
     for(int i=0; i<M; i++){
         cond->allocation[cond->cur][i] -= cond->request[i];
         cond->need[cond->cur][i] += cond->request[i];
@@ -116,7 +116,7 @@ bool sleeping_barber::RollBack(pCond cond){
     return true;
 }
 
-bool sleeping_barber::Commit(pCond cond){
+bool banker::Commit(pCond cond){
     for(int i=0; i<M; i++){
         cond->available[i] -= cond->request[i];
     }
@@ -127,7 +127,7 @@ bool sleeping_barber::Commit(pCond cond){
 
 // safety method
 
-bool sleeping_barber::SafetyCertification(pCond cond){
+bool banker::SafetyCertification(pCond cond){
     sfWork jud;
     sfWorkInit(&jud, cond);
 // 首先是找到一个没有完成的进程，把资源全部分配给它
@@ -135,7 +135,7 @@ bool sleeping_barber::SafetyCertification(pCond cond){
     return EndPhaseJudge(&jud,cond);
 }
 
-bool sleeping_barber::sfWorkInit(sfWork* jud, pCond cond){
+bool banker::sfWorkInit(sfWork* jud, pCond cond){
     for(int i=0;i<M;i++){
         jud->work[i] = cond->available[i];
     }
@@ -146,7 +146,7 @@ bool sleeping_barber::sfWorkInit(sfWork* jud, pCond cond){
 }
 
 
-bool sleeping_barber::FindAndAlloc(sfWork* jud, pCond cond){
+bool banker::FindAndAlloc(sfWork* jud, pCond cond){
     for(int i=0, j; i<cond->n; i++){
         if(!jud->finished[i]){
             for(j=0; j<M && cond->need[i][j] < jud->work[j]; j++);
@@ -160,7 +160,7 @@ bool sleeping_barber::FindAndAlloc(sfWork* jud, pCond cond){
     return false;
 }
 
-bool sleeping_barber::EndPhaseJudge(sfWork* jud, pCond cond){
+bool banker::EndPhaseJudge(sfWork* jud, pCond cond){
     for(int i=0; i<cond->n; i++){
         if(!jud->finished[i]){
             return false;

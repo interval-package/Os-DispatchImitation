@@ -20,5 +20,5 @@ add_executable(
         EnvImitator/Resource_Memory/Memory.cpp EnvImitator/Resource_Memory/Memory.h
         EnvImitator/Resource_Disk/Disk.cpp EnvImitator/Resource_Disk/Disk.h
 
-        DispatchAction/DispatchAction.cpp DispatchAction/DispatchAction.h
-        DispatchAction/sleeping_barber.cpp DispatchAction/sleeping_barber.h)
+        Threading_Pack/Thread_Proc_Wrapper.cpp Threading_Pack/Thread_Proc_Wrapper.h
+        Threading_Pack/banker.cpp Threading_Pack/banker.h)
