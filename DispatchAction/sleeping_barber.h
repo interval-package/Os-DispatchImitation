@@ -1,0 +1,14 @@
+//
+// Created by Zza on 2022/5/31.
+//
+
+#ifndef OS_DISPATCHIMITATION_SLEEPING_BARBER_H
+#define OS_DISPATCHIMITATION_SLEEPING_BARBER_H
+
+
+class sleeping_barber {
+
+};
+
+
+#endif //OS_DISPATCHIMITATION_SLEEPING_BARBER_H

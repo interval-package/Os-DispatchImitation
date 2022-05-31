@@ -17,4 +17,4 @@ add_executable(
         Exceptions/Exception_NoSuchFrame.cpp Exceptions/Exception_NoSuchFrame.h
 
 
-        EnvImitator/Resource_Memory/Memory.cpp EnvImitator/Resource_Memory/Memory.h EnvImitator/Resource_Disk/Disk.cpp EnvImitator/Resource_Disk/Disk.h Process/Process.cpp Process/Process.h Exceptions/Exception_Page_Missing.cpp Exceptions/Exception_Page_Missing.h)
+        EnvImitator/Resource_Memory/Memory.cpp EnvImitator/Resource_Memory/Memory.h EnvImitator/Resource_Disk/Disk.cpp EnvImitator/Resource_Disk/Disk.h Process/Process.cpp Process/Process.h Exceptions/Exception_Page_Missing.cpp Exceptions/Exception_Page_Missing.h DispatchAction/sleeping_barber.cpp DispatchAction/sleeping_barber.h)
