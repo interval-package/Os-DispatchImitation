@@ -187,5 +187,9 @@ void Process::write_disk_to_mem(PageItem *old_mem, PageItem *new_mem) {
     this->process_mem->write_mem_frame(old_mem->memPhyAd,temp);
 }
 
+void Process::set_dispatch_type(char type) {
+    this->page_set._dsp_type = type;
+}
+
 
 

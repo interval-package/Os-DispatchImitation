@@ -20,7 +20,14 @@ public:
 
     void input_ad_series();
 
+    void input_ad_series_detail();
+
+//    外包装的外部调用函数，没有实现线程安全
     static void outer_run(Thread_Proc_Wrapper proc);
+
+//    外包装的外部调度函数，实现线程安全
+//    进行优化升级
+    static void outer_main(Thread_Proc_Wrapper proc);
 
 private:
 //    存放我们的过程序列
@@ -32,9 +39,9 @@ private:
 
     typedef std::vector<_acts> _action;
     ACTIONS acts;
+    _action _detail_act;
 
 };
-
 
 
 #endif //OS_DISPATCHIMITATION_THREAD_PROC_WRAPPER_H

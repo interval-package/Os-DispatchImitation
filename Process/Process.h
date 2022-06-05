@@ -28,6 +28,9 @@ public:
 
     void single_step(int ad, bool is_write);
 
+//    this function is to reset the type of our dispatching method
+    void set_dispatch_type(char type);
+
     int id;
 private:
     PageList list;

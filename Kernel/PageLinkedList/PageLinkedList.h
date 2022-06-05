@@ -36,12 +36,17 @@ private:
 public:
     PageLinkedList(int len, Memory* tar);
 
+//    case 'i': _dsp_FIFO();
+//    case 'r': _dsp_LRU();
+//    case 'f': _dsp_LFU();
+//    case 'c': _dsp_clock();
     char _dsp_type = 'f';
 
 //    做了一个双向链表作为模拟
     Node* head_WorkSet;
     Node* head_StaySet;
 
+//    inner dispatching with detail actions
     PageItem* inner_dispatching(PageItem* tar);
 
 //    void set_dispatch_type(char type);

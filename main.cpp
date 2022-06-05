@@ -16,6 +16,8 @@ void main_without_thread(Memory &mem,Disk &disk);
 
 void main_with_thread(Memory &mem,Disk &disk);
 
+void input_set_dispatch_type(Process& proc);
+
 int main() {
     Memory mem;
     Disk disk;
@@ -61,16 +63,21 @@ void main_with_thread(Memory &mem,Disk &disk){
     Thread_Proc_Wrapper proc2(&mem, &disk, work_space);
     Thread_Proc_Wrapper proc3(&mem, &disk, work_space);
 
-    proc1.input_ad_series();
-    proc2.input_ad_series();
-    proc3.input_ad_series();
+    input_set_dispatch_type(proc1.main);
+    proc1.input_ad_series_detail();
+
+    input_set_dispatch_type(proc2.main);
+    proc2.input_ad_series_detail();
+
+    input_set_dispatch_type(proc3.main);
+    proc3.input_ad_series_detail();
 
     cout<<endl;
 
 //    c++，要是使用引用类型的传参会有问题的，所以不行
-    thread th1(Thread_Proc_Wrapper::outer_run, proc1);
-    thread th2(Thread_Proc_Wrapper::outer_run, proc2);
-    thread th3(Thread_Proc_Wrapper::outer_run, proc3);
+    thread th1(Thread_Proc_Wrapper::outer_main, proc1);
+    thread th2(Thread_Proc_Wrapper::outer_main, proc2);
+    thread th3(Thread_Proc_Wrapper::outer_main, proc3);
 
     th1.join();
     th2.join();
@@ -94,4 +101,18 @@ void disp_init_interface(){
     cout<<"please enter address like {block id}*{page length}"<<endl;
     cout<<"==============================================="<<endl;
 
+}
+
+void input_set_dispatch_type(Process& proc){
+    cout<<"***************************\n"
+          "input your target disp type\n"
+          "case 'i': _dsp_FIFO();\n"
+          "case 'r': _dsp_LRU();\n"
+          "case 'f': _dsp_LFU();\n"
+          "case 'c': _dsp_clock();\n"
+          "***************************\n"
+          "yours:"<<endl;
+    char temp;
+    cin>>temp;
+    proc.set_dispatch_type(temp);
 }
