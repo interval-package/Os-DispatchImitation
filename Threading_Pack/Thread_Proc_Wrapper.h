@@ -29,6 +29,8 @@ public:
 //    进行优化升级
     static void outer_main(Thread_Proc_Wrapper proc);
 
+    void inner_main();
+
 private:
 //    存放我们的过程序列
 

@@ -14,6 +14,8 @@ void disp_init_interface();
 
 void main_without_thread(Memory &mem,Disk &disk);
 
+void new_main_without_thread(Memory &mem, Disk &disk);
+
 void main_with_thread(Memory &mem,Disk &disk);
 
 void input_set_dispatch_type(Process& proc);
@@ -28,13 +30,17 @@ int main() {
 
 //    main_without_thread(mem,disk);
 
-    main_with_thread(mem,disk);
+    new_main_without_thread(mem,disk);
+
+//    main_with_thread(mem,disk);
 
     return 0;
 }
 
 void main_without_thread(Memory &mem,Disk &disk){
     Process proc(&mem,&disk,work_space);
+
+    input_set_dispatch_type(proc);
 
     ACTIONS acts;
 //    设置访问序列
@@ -83,6 +89,14 @@ void main_with_thread(Memory &mem,Disk &disk){
     th2.join();
     th3.join();
 
+}
+
+void new_main_without_thread(Memory &mem, Disk &disk){
+    Thread_Proc_Wrapper proc(&mem, &disk, work_space);
+    input_set_dispatch_type(proc.main);
+    proc.input_ad_series_detail();
+    proc.inner_main();
+    proc.main.run();
 }
 
 void disp_init_interface(){

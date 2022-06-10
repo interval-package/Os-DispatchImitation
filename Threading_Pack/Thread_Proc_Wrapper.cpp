@@ -74,4 +74,15 @@ void Thread_Proc_Wrapper::outer_main(Thread_Proc_Wrapper proc) {
     }
 }
 
+void Thread_Proc_Wrapper::inner_main() {
+    using namespace std;
+    cout<<"Dispatch safe threading!"<<endl;
+    for(auto iter: this->_detail_act){
+        cout<<"================================="<<endl;
+        cout<<"proc id : "<<main.id<<endl;
+        main.single_step(iter.ad,iter.is_write);
+        cout<<"================================="<<endl;
+    }
+}
+
 

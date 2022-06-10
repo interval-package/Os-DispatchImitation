@@ -82,12 +82,14 @@ void Process::run() {
 
     while (cin>>instruction) {
 
+        if(instruction == 0) break;
+
         if (instruction<0){
             if(instruction>=-5){
                 this->page_set.display_cur();
                 continue;
             } else{
-                break;
+                this->single_step(-instruction, true);
             }
         }
 
