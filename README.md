@@ -1,5 +1,13 @@
 # 操作系统实验：多线程下模拟分页虚拟地址与页面置换算法
 
+[TOC]
+
+## 设计目的
+
+1、 增强学生对计算机操作系统基本原理、基本理论、基本算法的理解
+
+2、 提高和培养学生的动手能力
+
 ## 需求分析
 
 ### 分页虚拟内存
@@ -125,9 +133,6 @@
 </div>
 
 
-
-## 详细设计
-
 ## 算法设计
 
 ### 先进先出算法（First-In First-Out, FIFO）
@@ -194,9 +199,430 @@ LRU理论上是可以实现的，但是代价很高。维护一个所有页面�
 3. 查找（0，0），不修改。
 4. 查找（0，1），一定找到，不修改。
 
-## 程序测试
+## 详细设计
 
-## 运行结果
+### 核心ADT设计
+
+#### `PageFrame`
+
+```c++
+class PageFrame {
+public:
+    static const int PAGE_LENGTH=1024;
+//    explicit PageFrame(int _id, int _info=0);
+    int info = 0;
+    int id =0;
+
+    void disp_self() const;
+};
+
+```
+
+#### `PageItem`
+
+```c++
+class PageItem {
+private:
+    std::string info;
+
+
+
+//    PageFrame* tar;
+// 这里没有处理好，我们是要用什么
+public:
+// all the objs we must explicitly call the constructor
+    explicit PageItem()= default;
+
+// we define the length of every page frame
+//    const static int PageLen = 1024;
+    int memPhyAd = -1;
+    int diskPhyAd = -1;
+    bool inMemory = false;
+
+//    使用回写法处理
+    int isWritten = false;
+//    同时用于判断是否被访问，>0则必为true
+//    再调入时，进行初始化，变为0，我们是否访问指的是被调入后是否访问。
+    int accessTimes = -1;
+    int recentAccess = -1;
+
+    void reset();
+
+    void init_set();
+
+    void accessed_action();
+
+// level means the type of this page, if -1 it means it's page
+// if level>0, it's a list
+    int level = -1;
+
+    void disp_self() const;
+};
+```
+
+#### `PageLinkedList`
+
+```c++
+// 将会在该函数内部进行调度，算法的实现
+// 这里还要实现，内存的申请和分配
+
+class PageLinkedList {
+private:
+//    我们将目前所有的page项，使用链表进行连接
+    typedef struct Node{
+        PageItem* data;
+        Node* next;
+        Node* prior;
+    } Node, *pNode;
+
+//    使用这个长度来判断，链表是否为满
+    const int _len;
+    int WorkSetLen;
+
+//    模拟队列操作，入队出队
+    void add_work_node(PageItem* tar);
+    void cut_node(pNode pos);
+    PageItem* de_work_node();
+
+//    内存对象，目前还没有明确用途
+    Memory *mem;
+
+public:
+    PageLinkedList(int len, Memory* tar);
+
+//    case 'i': _dsp_FIFO();
+//    case 'r': _dsp_LRU();
+//    case 'f': _dsp_LFU();
+//    case 'c': _dsp_clock();
+    char _dsp_type = 'f';
+
+//    做了一个双向链表作为模拟
+    Node* head_WorkSet;
+    Node* head_StaySet;
+
+//    inner dispatching with detail actions
+    PageItem* inner_dispatching(PageItem* tar);
+
+//    void set_dispatch_type(char type);
+
+    ~PageLinkedList();
+
+    void display_cur() const;
+
+private:
+
+//    作为调度算法，要实现的是找到目标的位置
+//    在核心调度算法中，我们不做，插入与删除的操作
+//    我们所做的,只是找出对应的节点指针,后面的操作交给外部包装函数
+//    我们保证,在这里我们的链表一定是满的
+    pNode _dsp_FIFO() const;
+
+    pNode _dsp_LRU() const;
+
+    pNode _dsp_LFU() const;
+
+    pNode _dsp_clock() const;
+
+    pNode _dsp_advClock() const;
+
+//    pNode _dsp_WorkSet() const;
+//
+//    pNode _dsp_wsClock() const;
+
+};
+```
+
+#### `PageList`
+
+```c++
+// 页表
+// 认为PageList也是一个页表项
+class PageList:public PageFrame{
+public:
+//    默认初始化函数，使得按照顺序向磁盘进行映射
+    explicit PageList();
+
+    explicit PageList(int _len);
+
+    static const int LIST_LENGTH = 16;
+
+    PageItem list[LIST_LENGTH];
+
+    int len;
+
+    PageItem* pageAccess(int ad);
+
+//    void randomly_init_list();
+
+//    void disp_self();
+
+};
+```
+
+### 运行ADT设计
+
+#### Process
+
+```c++
+typedef std::vector<int> ACTIONS;
+
+class Process {
+public:
+
+    Process(Memory *mem, Disk *disk, int workspace_size);
+
+    PageFrame* access_vir_ad_R(int ad);
+
+    PageFrame* access_vir_ad_RW(int ad, bool is_write);
+
+    void run(ACTIONS &tar);
+
+    void run();
+
+    void single_step(int ad, bool is_write);
+
+//    this function is to reset the type of our dispatching method
+    void set_dispatch_type(char type);
+
+    int id;
+private:
+    PageList list;
+//    使用页框链表，用于后续的调度算法
+    PageLinkedList page_set;
+
+//    获得对应的指针，内存指针应当有两个备份。
+    Memory* process_mem;
+    Disk* process_disk;
+
+    void dispatching(Exception_Page_Missing& e);
+
+//    使用页表项作为媒介，将内存内部的信息写入
+    void write_mem_to_disk(PageItem* mem_item);
+
+    void write_disk_to_mem(PageItem* old_mem, PageItem* new_mem);
+};
+```
+
+#### Thread_Proc_Wrapper
+
+```c++
+#include "../Process/Process.h"
+
+class Thread_Proc_Wrapper {
+//    这个是针对对线程特定使用的，封装了互斥访问的内容
+public:
+    Process main;
+
+//    这里的主要内容还是就是进行一个Process的初始化
+    Thread_Proc_Wrapper(Memory *mem, Disk *disk, int workspace_size);
+
+//    for the usage of multi thread
+    void operator()();
+
+    void input_ad_series();
+
+    void input_ad_series_detail();
+
+//    外包装的外部调用函数，没有实现线程安全
+    static void outer_run(Thread_Proc_Wrapper proc);
+
+//    外包装的外部调度函数，实现线程安全
+//    进行优化升级
+    static void outer_main(Thread_Proc_Wrapper proc);
+
+    void inner_main();
+
+private:
+//    存放我们的过程序列
+
+    struct _acts{
+        int ad;
+        bool is_write;
+    };
+
+    typedef std::vector<_acts> _action;
+    ACTIONS acts;
+    _action _detail_act;
+
+};
+```
+
+### 辅助ADT设计
+
+#### disk
+
+```c++
+class Disk {
+public:
+    Disk();
+
+//    获得磁盘页面实例，当调入内存时使用
+    PageFrame &get_disk_frame_instance(int ad);
+
+    void write_disk_frame(int ad, const PageFrame &frame);
+
+
+    static const int INIT_DISK_SIZE = 2048;
+
+private:
+    int d_size = INIT_DISK_SIZE;
+    PageFrame body[INIT_DISK_SIZE]{};
+
+};
+```
+
+#### Memory
+
+```c++
+class Memory {
+public:
+    static const int INIT_MEMORY_SIZE = 128;
+
+    Memory();
+
+    std::vector<int> free_set;
+
+    PageFrame *access_memory(int phy_ad, int offset);
+
+    void write_mem_frame(int phy_ad, const PageFrame &tar);
+
+//    申请新的内存块
+    int req_new_mem();
+
+//    获得某个特定块的实例，用于写回操作
+    PageFrame& get_mem_frame_instance(int ad);
+
+//    ~Memory();
+private:
+    int m_size = INIT_MEMORY_SIZE;
+    PageFrame body[INIT_MEMORY_SIZE]{};
+};
+
+```
+
+#### Exception_Page_Missing
+
+```c++
+class Exception_Page_Missing: public std::exception{
+public:
+//    缺页中断必须要指出现在我们所希望访问的实际物理地址，用于传参
+
+    explicit Exception_Page_Missing(PageItem *tar, int _ad, int _offset);
+//    int tar_phy_ad{};
+
+    PageItem *item;
+
+    int block_ad;
+    int offset;
+//    includes the error place we try to get
+    void disp_err() const;
+};
+```
+
+#### `Exception_BoundExceed`
+
+```c++
+class Exception_BoundExceed:public std::exception {
+public:
+    explicit Exception_BoundExceed(const char* msg = "bound exceed"){
+        std::cerr<<msg<<std::endl;
+    }
+};
+```
+
+# 死锁算法：银行家算法和安全性算法
+
+## 银行家算法
+
+首先，算法的核心在于，每次进程申请资源时，都会进行一次试探性分配，若成功，则真实分配。
+
+### 基本思想：
+
+- 在每个新进程进入系统时，他必须声明在运行过程中，可能需要的每种资源类型的最大单元数目（数目不超过系统拥有的资源总量）。
+- 当进程请求一组资源时，系统必须首先在确定是否有足够的资源分配给该进程。
+- 若有，在进一步计算将这些资源分配给进程后，是否会使系统处于不安全状态。如果处于安全状态，才将资源分配给他；否则，让进程等待。
+
+### 银行家算法中的数据结构
+
+为实现银行家算法，在系统中必须要有这样四个数据结构，分别用来描述**系统中可利用的资源**，所有**进程对资源的最大需求**，**系统中的资源分配**，以及**所有进程还需要资源的情况**。
+
+**可利用资源 Available**：这是一个含有 m 个元素的数组，其中每一个元素代表一类可利用的资源情况。其初始值是系统所配置的全部可用资源的数目。 如果Available[j] = k，则表示系统中现有 Rj 类资源 k 个。
+
+**最大需求矩阵 Max**：这是一个 nm 的矩阵。它定义了系统中 n 个进程每一个对 m 类资源的最大需求。`如果Max[i,j] = K，则表示进程i需要 Rj 类资源的最大数目为 K。`
+
+**分配矩阵 Allocation**：这也是一个 nm 矩阵，它定义了系统中每一类资源当前已分配给每一类进程的资源。`如果Allocation[i.j]= K，则表示进程 i 已分得 Rj 类资源的数目为 K。`
+
+**需求矩阵 Need**：当前所有进程还需要的资源m的矩阵，用来表示每一个进程尚需的各类资源数，`如果Need[i,j]=K，则表示进程 i 还需要 K 个 Rj 类资源才能完成任务`。
+
+**上述三个矩阵之间存在如下关系：`Need[i, j] = Max[i, j] - Allocation[i, j]。`**
+
+| 名称           |                                               |                      |
+| -------------- | --------------------------------------------- | -------------------- |
+| 可利用资源向量 | `int  Available[m]`                           | m为资源种类          |
+| 最大需求矩阵   | `int  Max [n][m]`                             | n为进程的数量        |
+| 分配矩阵       | `int  Allocation[n][m]`                       |                      |
+| 还需资源矩阵   | `int  need[i][j]=Max[i][j]- Allocation[i][j]` |                      |
+| 申请资源数量   | `int  Request [m]`                            | 会一直更新，暂存申请 |
+| 工作向量       | `int  Work[m]    int  Finish[n]`              |                      |
+
+### 算法步骤
+
+#### 1.初始化
+
+#### 2.进程申请资源
+
+（1）数据装入Request
+
+（2）输入合法性判断
+
+如果合计申请超出了之前声明的最大，则报错。如果申请超过了目前可用，则阻塞。
+
+#### 3.试探性分配
+
+```java
+for(int i=0;i<m;i++)
+{
+    available[i] -= request[i];
+    allocation[index][i] += request[i];
+    need[index][i] -= request[i];
+}
+```
+
+#### 4.安全检验
+
+调用安全性算法，如果当前状态时安全的，则正式进行分配。否则，回滚状态，阻塞该进程。
+
+## 安全性算法
+
+### 数据结构
+
+**工作向量 Work**，它表示可以提供给进程继续运行所需要的各类的资源数目，它含有 m 个元素，在执行安全算法开始时，`Work = Available`；
+
+**Finish**，它表示系统是否有足够的资源分配给进程，使之运行完成。开始先做`Finish[i] = false`。当有足够资源分配给进程时，再令 `FInish[i] = false`;
+
+### 算法思想
+
+a.从进程集合中找到一个满足下述条件的进程：
+
+```c
+Finish[i] = false;
+Need[i,j]<=Work[j];
+如果找到执行步骤 b，否则执行步骤 c；
+```
+
+b.当进程 Pi 获得资源后，可顺利执行，直到完成，并释放它的资源。故应执行：
+
+```c
+Work[j] = Work[j] + Allocation[i,j];
+Finish[j] =true;
+返回执行步骤 a
+```
+
+c.如果所有进程的 `Finish[i] = true` 都满足，则表示系统处于安全状态；否则，系统处于不安全状态。
+
+## 部分源代码
+
+见附录文件
 
 ## 心得总结
 
